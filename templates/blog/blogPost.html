@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} {{post.title}} {% endblock title %}
+
+{% block body %}
+<div class="container my-4">
+        <h2 class="blog-post-title">{{post.title}}</h2>
+        <p class="blog-post-meta">{{post.timeStamp}} by <a href="/about">{{post.author}}</a></p>
+
+        <img src="/media/{{post.title_image}}" alt="">
+        <p>{{post.content}}</p>
+        <br>
+
+        {% if user.is_authenticated %}
+                <h4>{{request.user}}</h4>
+                <form action="{{post.slug}}/do_comment" method="post">
+                {% csrf_token %}
+                <textarea name="body" class="form-control" id="body" cols="20" rows="4"></textarea>
+                 </textarea>
+                <button type="submit" class="btn btn-primary my-2">Submit</button>
+                </form>
+        {% else %}
+                <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#LoginModel">Login</button>
+        {% endif %}
+
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <h3 class="border-bottom border-gray pb-2 mb-0">Comments</h3>
+                {% for comment in comments %}
+                <div class="media text-muted pt-3">
+                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">{{comment.name}}</strong>
+                    {{comment.body}}
+                    <br>
+                    {{comment.created_on}}
+                  </p>
+                </div>
+                
+                {% endfor %}
+        </div>
+
+
+
+</div>
+
+{% endblock body %}
